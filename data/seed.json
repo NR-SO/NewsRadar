@@ -1,0 +1,59 @@
+{
+  "sources": [
+    {
+      "name": "BBC News",
+      "url": "http://feeds.bbc.co.uk/news/rss.xml",
+      "category": "General News",
+      "active": true,
+      "updateFrequency": "hourly"
+    },
+    {
+      "name": "Reuters - Technology",
+      "url": "https://www.reuters.com/technology",
+      "category": "Technology",
+      "active": true,
+      "updateFrequency": "hourly"
+    },
+    {
+      "name": "The Guardian - Business",
+      "url": "https://www.theguardian.com/business/rss",
+      "category": "Business",
+      "active": true,
+      "updateFrequency": "hourly"
+    },
+    {
+      "name": "NASA News",
+      "url": "https://www.nasa.gov/news/news.rss.xml",
+      "category": "Science",
+      "active": true,
+      "updateFrequency": "daily"
+    },
+    {
+      "name": "TechCrunch",
+      "url": "http://feeds.feedburner.com/TechCrunch/",
+      "category": "Technology",
+      "active": true,
+      "updateFrequency": "hourly"
+    }
+  ],
+  "iptcTopics": {
+    "version": "2.0",
+    "topics": [
+      {
+        "code": "01000000",
+        "name": "Arts, Culture, Entertainment, and Sports",
+        "subtopics": ["01001000", "01002000", "01003000"]
+      },
+      {
+        "code": "02000000",
+        "name": "Business, Economics, and Finance",
+        "subtopics": ["02001000", "02002000", "02003000"]
+      },
+      {
+        "code": "07000000",
+        "name": "Science and Education",
+        "subtopics": ["07001000", "07002000", "07003000"]
+      }
+    ]
+  }
+}

@@ -1,0 +1,97 @@
+version: '3.8'
+
+# Docker Compose para NEWSRADAR
+# Proyecto académico - Grado en Ingeniería Informática, UC3M
+# Servicios: MongoDB, Backend (FastAPI), Frontend (React)
+
+services:
+  # ============================================
+  # MongoDB Database
+  # ============================================
+  mongodb:
+    image: mongo:7.0-alpine
+    container_name: newsradar-mongodb
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_ROOT_USER:-admin}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_ROOT_PASSWORD:-password}
+      MONGO_INITDB_DATABASE: ${MONGO_DB:-newsradar_db}
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+      - ./data/init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js
+    networks:
+      - newsradar-network
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/test --quiet
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ============================================
+  # Backend FastAPI
+  # ============================================
+  backend:
+    build:
+      context: .
+      dockerfile: src/backend/Dockerfile
+    container_name: newsradar-backend
+    restart: unless-stopped
+    environment:
+      - MONGODB_URL=mongodb://${MONGO_ROOT_USER:-admin}:${MONGO_ROOT_PASSWORD:-password}@mongodb:27017/${MONGO_DB:-newsradar_db}?authSource=admin
+      - ENVIRONMENT=development
+      - DEBUG=true
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./src/backend:/app
+      - ./data:/app/data
+    depends_on:
+      mongodb:
+        condition: service_healthy
+    networks:
+      - newsradar-network
+    command: uvicorn main:app --host 0.0.0.0 --port 8000 --reload
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # ============================================
+  # Frontend React
+  # ============================================
+  frontend:
+    build:
+      context: ./src/frontend
+      dockerfile: Dockerfile
+    container_name: newsradar-frontend
+    restart: unless-stopped
+    environment:
+      - REACT_APP_API_URL=http://backend:8000
+      - REACT_APP_ENV=development
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+    networks:
+      - newsradar-network
+    volumes:
+      - ./src/frontend:/app
+      - /app/node_modules
+
+# ============================================
+# Volúmenes persistentes
+# ============================================
+volumes:
+  mongodb_data:
+    driver: local
+
+# ============================================
+# Red de comunicación
+# ============================================
+networks:
+  newsradar-network:
+    driver: bridge
