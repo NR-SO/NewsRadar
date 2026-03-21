@@ -67,7 +67,7 @@ Se ha seleccionado el siguiente stack:
 - Componentes reutilizables y gestión de estado (Zustand)
 - D3.js: Librería estándar para visualizaciones de datos complejas
 - Visualización de flujos de noticias y clasificaciones IPTC
-- Compatible con herramientas de desarrollo modernas (Vite)
+- Ecosistema maduro y compatible con el empaquetador estándar de la industria (Webpack).
 
 **Alternativas consideradas:**
 - Angular: Mayor curva de aprendizaje, overhead innecesario
@@ -112,19 +112,19 @@ Se ha seleccionado el siguiente stack:
 
 ### Positivas
 
-✅ Stack moderno y relevante industrialmente  
-✅ Excelente rendimiento para aplicaciones IoT/tiempo real  
-✅ Comunidades activas y amplia documentación  
-✅ Herramientas modernas para desarrollo y testing  
-✅ Facilita scalabilidad futura  
-✅ Buena integración con herramientas de IA (GPT assistants)
+Stack moderno y relevante industrialmente  
+Excelente rendimiento para aplicaciones IoT/tiempo real  
+Comunidades activas y amplia documentación  
+Herramientas modernas para desarrollo y testing  
+Facilita scalabilidad futura  
+Buena integración con herramientas de IA (GPT assistants)
 
 ### Negativas/Riesgos
 
-⚠️ Mayor overhead inicial de configuración Docker  
-⚠️ Menos control fino que alternativas como Angular/ASP.NET  
-⚠️ MongoDB requiere cuidado con indexes en grandes volúmenes  
-⚠️ Curva de aprendizaje para D3.js  
+Mayor overhead inicial de configuración Docker  
+Menos control fino que alternativas como Angular/ASP.NET  
+MongoDB requiere cuidado con indexes en grandes volúmenes  
+Curva de aprendizaje para D3.js  
 
 ---
 
