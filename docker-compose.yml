@@ -1,5 +1,3 @@
-version: '3.8'
-
 # Docker Compose para NEWSRADAR
 # Proyecto académico - Grado en Ingeniería Informática, UC3M
 # Servicios: MongoDB, Backend (FastAPI), Frontend (React)
@@ -9,7 +7,7 @@ services:
   # MongoDB Database
   # ============================================
   mongodb:
-    image: mongo:7.0-alpine
+    image: mongo:7.0
     container_name: newsradar-mongodb
     restart: unless-stopped
     environment:
@@ -34,8 +32,8 @@ services:
   # ============================================
   backend:
     build:
-      context: .
-      dockerfile: src/backend/Dockerfile
+      context: ./src/backend
+      dockerfile: Dockerfile
     container_name: newsradar-backend
     restart: unless-stopped
     environment:

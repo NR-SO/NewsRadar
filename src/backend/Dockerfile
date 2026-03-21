@@ -1,19 +1,27 @@
 # Dockerfile para NEWSRADAR Backend (FastAPI)
-# Multi-stage para optimizar tamaño
+# Multi-stage para optimizar tamaño y seguridad
 
-FROM python:3.11-slim as builder
+FROM python:3.11-slim AS builder
 
 WORKDIR /build
-RUN apt-get update && apt-get install -y --no-install-recommends \
+
+# Actualizar paquetes base y dependencias de compilacion
+RUN apt-get update && apt-get upgrade -y && apt-get install -y --no-install-recommends \
     build-essential \
     && rm -rf /var/lib/apt/lists/*
 
 COPY requirements.txt .
-RUN pip wheel --no-cache-dir --no-deps --wheel-dir /opt/wheels -r requirements.txt
+
+# ELIMINADO --no-deps para empaquetar todo el arbol de dependencias
+RUN pip wheel --no-cache-dir --wheel-dir /opt/wheels -r requirements.txt
 
 FROM python:3.11-slim
 
 WORKDIR /app
+
+# Actualizar paquetes del sistema en la imagen final
+RUN apt-get update && apt-get upgrade -y \
+    && rm -rf /var/lib/apt/lists/*
 
 COPY --from=builder /opt/wheels /opt/wheels
 COPY requirements.txt .
