@@ -1,4 +1,4 @@
-# NEWSRADAR 📡
+# NEWSRADAR
 
 **Proyecto Académico - Grado en Ingeniería Informática, UC3M**
 
@@ -6,11 +6,11 @@ Sistema de procesamiento y análisis de canales RSS con clasificación automáti
 
 ---
 
-## 📋 Tabla de contenidos
+## Tabla de contenidos
 
 - [Requisitos previos](#requisitos-previos)
 - [Clonar el repositorio](#clonar-el-repositorio)
-- [Comando único para ejecutar todo](#comando-único-para-ejecutar-todo)
+- [Ejecución rápida (1 Comando)](#ejecución-rápida-1-comando)
 - [Build](#build)
 - [Test](#test)
 - [Deploy](#deploy)
@@ -19,34 +19,31 @@ Sistema de procesamiento y análisis de canales RSS con clasificación automáti
 
 ---
 
-## 🔧 Requisitos previos
+## Requisitos previos
 
 - **Docker** y **Docker Compose** (v1.29+)
 - **Git**
-- **Python** 3.11+ (solo para desarrollo local sin Docker)
-- **Node.js** 18+ (solo para desarrollo local sin Docker)
 
 ---
 
-## 🚀 Clonar el repositorio
+## Clonar el repositorio
 
 ```bash
-git clone https://github.com/EliiSD/NewsRadar.git
+git clone [https://github.com/EliiSD/NewsRadar.git](https://github.com/EliiSD/NewsRadar.git)
 cd NewsRadar
 ```
 
 ---
 
-## ⚡ Comando único para ejecutar todo
+## Ejecución rápida (1 Comando)
 
-Este es el comando que levanta toda la infraestructura (Base de datos, Backend, Frontend):
+Este es el comando único que levanta toda la infraestructura de forma aislada (Base de datos, Backend, Frontend):
 
 ```bash
-docker-compose up -d
+docker-compose up --build -d
 ```
 
-Para ver los logs de todos los servicios:
-
+Para monitorizar los logs en tiempo real:
 ```bash
 docker-compose logs -f
 ```
@@ -61,136 +58,81 @@ docker-compose logs -f db
 
 ---
 
-## 🏗️ Build
+## Build
 
-### Build con Docker (recomendado)
+Para reconstruir las imágenes Docker desde cero (por ejemplo, si añades nuevas dependencias al `package.json` o `requirements.txt`):
 
 ```bash
-docker-compose build
-```
-
-Este comando reconstruye todas las imágenes Docker desde cero.
-
-### Build manual (sin Docker)
-
-**Backend:**
-```bash
-cd src/backend
-pip install -r requirements.txt
-cd ../..
-```
-
-**Frontend:**
-```bash
-cd src/frontend
-npm install
-cd ../..
+docker-compose build --no-cache
 ```
 
 ---
 
-## 🧪 Test
+## Test
 
-### Ejecutar tests con script automatizado
+Las pruebas se ejecutan directamente dentro de los contenedores Docker para garantizar la reproducibilidad del entorno:
 
+**Pruebas unitarias del backend (FastAPI):**
 ```bash
-bash scripts/test.sh
+docker exec -it newsradar-backend pytest -v
 ```
 
-### Ejecutar tests manualmente
-
-**Pruebas unitarias del backend:**
+**Pruebas del frontend (React):**
 ```bash
-python -m pytest tests/unit -v
-```
-
-**Pruebas funcionales:**
-```bash
-python -m pytest tests/functional -v
-```
-
-**Pruebas de salud de la API:**
-```bash
-python -m pytest tests/unit/test_health.py -v
-```
-
-**Todas las pruebas con cobertura:**
-```bash
-python -m pytest tests/ -v --cov=src/backend --cov-report=html
+docker exec -it newsradar-frontend npm test -- --watchAll=false
 ```
 
 ---
 
-## 🚢 Deploy
+## Deploy
 
-### Deploy con Docker Compose (desarrollo/preproducción)
+El sistema está contenerizado y listo para su despliegue en entornos de producción. 
 
+Para reiniciar el entorno completo:
 ```bash
-bash scripts/run.sh
+docker-compose down && docker-compose up -d
 ```
 
-O manualmente:
-
-```bash
-docker-compose up -d --build
-```
-
-Esperar a que todos los servicios estén healthy:
-
-```bash
-docker-compose ps
-```
-
-### Detener la aplicación
-
-```bash
-docker-compose down
-```
-
-Detener y eliminar volúmenes (cuidado: borra datos):
-
+Para detener y limpiar la infraestructura completa (CUIDADO: borra los volúmenes de base de datos):
 ```bash
 docker-compose down -v
 ```
 
 ---
 
-## 🌐 Acceso a los servicios
+## Acceso a los servicios
 
-Una vez levantada la aplicación:
+Una vez levantada la aplicación, los servicios estarán disponibles en los siguientes endpoints:
 
-| Servicio | URL | Credenciales |
-|----------|-----|--------------|
-| **Frontend** | http://localhost:3000 | - |
-| **API Backend** | http://localhost:8000 | - |
+| Servicio | URL | Puerto Interno |
+|----------|-----|----------------|
+| **Frontend (React)** | http://localhost:3000 | 3000 |
+| **API Backend (FastAPI)** | http://localhost:8000 | 8000 |
 | **API Docs (Swagger)** | http://localhost:8000/docs | - |
 | **API Docs (ReDoc)** | http://localhost:8000/redoc | - |
-| **PostgreSQL** | localhost:5432 | user: `newsradar`, password: `newsradar` |
-| **pgAdmin** | http://localhost:5050 | user: `admin@newsradar.local`, password: `admin` |
+| **Base de Datos (MongoDB)** | mongodb://localhost:27017 | 27017 |
 
 ---
 
-## 📚 Documentación
+## Documentación
 
-### Documentación del proyecto
-
-- [Architecture Decision Records](docs/adr/README.md) - Decisiones arquitectónicas
-- [Especificación técnica](docs/requirements/especificacion.md) - Requisitos técnicos detallados
-- [Prompts IA utilizados](docs/prompts_ia.md) - Registro de prompts para la IA
+- [Architecture Decision Records (ADR)](docs/adr/README.md) - Decisiones arquitectónicas.
+- [Especificación técnica](docs/requirements/especificacion.md) - Requisitos técnicos detallados.
+- [Registro de prompts IA](docs/prompts_ia.md) - Trazabilidad del uso de IA en el proyecto.
 
 ---
 
-## 📁 Estructura del proyecto
+## Estructura del proyecto
 
-```
+```text
 NewsRadar/
 ├── src/
-│   ├── backend/              # FastAPI application
+│   ├── backend/             # API REST en FastAPI
 │   │   ├── app/
-│   │   ├── main.py           # Punto de entrada
+│   │   ├── tests/
 │   │   ├── requirements.txt
 │   │   └── Dockerfile
-│   └── frontend/             # React application
+│   └── frontend/            # Interfaz en React.js
 │       ├── public/
 │       ├── src/
 │       ├── package.json
@@ -208,10 +150,7 @@ NewsRadar/
 │   ├── unit/                # Pruebas unitarias
 │   └── functional/          # Pruebas funcionales
 ├── config/
-│   ├── .env.example
-│   ├── dockerfile.backend
-│   ├── dockerfile.frontend
-│   └── nginx.conf
+│   └── .env.example
 ├── data/
 │   ├── seed.json
 │   └── init-mongo.js
@@ -220,90 +159,18 @@ NewsRadar/
 
 ---
 
-## 🐛 Troubleshooting
-
-### Los servicios no responden
-
-Verificar que están corriendo:
-```bash
-docker-compose ps
-```
-
-### Ver logs de errores
-
-```bash
-docker-compose logs backend
-```
-
-### Reiniciar los servicios
-
-```bash
-docker-compose restart
-```
-
-### Problemas con puertos ocupados
-
-Si los puertos 3000, 8000, 5432 están ocupados, editar `docker-compose.yml` y cambiar los puertos.
-
----
-
-## 📄 Licencia
-
-Proyecto académico - UC3M, 2026
-
----
-
-## 👥 Contacto
-
-Para preguntas sobre este proyecto, contactar al equipo de desarrollo.
-
-**Última actualización:** Marzo 2026  
-**Versión:** 1.0 - Sprint 1
-
-## Deploy
-
-Para desplegar en producción:
-
-# Configurar variables de entorno
-cp config/.env.example config/.env.production
-# Editar config/.env.production con valores correctos
-
-# Ejecutar con compose en producción
-docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d
-
-## Estructura del proyecto
-
-├── src/
-│   ├── backend/         - API REST en FastAPI
-│   └── frontend/        - Interfaz en React.js
-├── docs/
-│   ├── adr/             - Architecture Decision Records
-│   └── requirements/    - Especificaciones de requisitos
-├── scripts/             - Scripts de automatización
-├── tests/
-│   ├── unit/            - Pruebas unitarias
-│   └── functional/      - Pruebas funcionales
-├── config/              - Configuración y variables de entorno
-├── data/                - Datos de prueba
-├── .github/workflows/   - Pipeline CI/CD
-└── docker-compose.yml   - Orquestacion de contenedores
-
-## Documentacion
-
-- [Architecture Decision Records](docs/adr/README.md)
-- [Requisitos del Sistema](docs/requirements/README.md)
-
-## Contribucion
+## Contribución
 
 Por favor, siga las siguientes convenciones:
-- Cree una rama para cada feature: \git checkout -b feature/descripcion\
-- Haga commits descriptivos
-- Envíe un pull request con descripción detallada
+1. Cree una rama para cada feature: `git checkout -b feature/descripcion`
+2. Haga commits descriptivos.
+3. Envíe un pull request detallando los cambios.
 
 ## Licencia
 
-Se utilizará la licencia especificada en LICENSE.
+Proyecto académico - UC3M, 2026
 
 ## Contacto
 
 Para dudas o sugerencias, contacte al equipo de desarrollo.
+**Versión:** 1.0 - Sprint 1
