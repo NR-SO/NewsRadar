@@ -204,7 +204,7 @@ print("✓ Índices 'articles' creados (incluye búsqueda de texto completo)");
 // 10+ medios de comunicación, cobertura de categorías IPTC principales
 // ============================================================
 if (db.sources.countDocuments() === 0) {
-  var now = new Date();
+  const now = new Date();
   db.sources.insertMany([
     // --- BBC News (Reino Unido) ---
     { name: "BBC News - Top Stories", url: "http://feeds.bbc.co.uk/news/rss.xml", mediaOutlet: "BBC News", category: "General News", iptcCode: "11000000", language: "en", active: true, updateFrequency: "hourly", createdAt: now, updatedAt: now },
