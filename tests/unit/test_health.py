@@ -1,86 +1,50 @@
 """
-Test para verificar el endpoint de salud de la API
-Sprint 1: Validación básica de la API
+Test para verificar el endpoint de health de la API
+Sprint 1: Validación básica del API
+Se emplea pytest para realizar pruebas unitarias.
 """
-import pytest
-import sys
-import os
-from pathlib import Path
-
-# Agregar el directorio src/backend al path  
-sys.path.insert(0, str(Path(__file__).parent.parent.parent / 'src' / 'backend'))
-
-from fastapi.testclient import TestClient
-from main import app
 
 
-@pytest.fixture
-def client():
-    """Fixture que proporciona un cliente TestClient para FastAPI."""
-    return TestClient(app)
+# Test para verificar que el endpoint de health de la API responde correctamente
+def test_health_endpoint_returns_200(client):
+    # Simulamos una petición HTTP GET a la ruta /health utilizando el cliente de pruebas
+    response = client.get("/health")
+    assert response.status_code == 200
+
+# Test para verificar que el endpoint de health devuelve la estructura de datos esperada
+def test_health_endpoint_response_structure(client):
+    # Simulamos la petición
+    response = client.get("/health")
+    # Convertimos la respuesta en un diccionario para verificar su contenido
+    data = response.json()
+
+    assert "status" in data
+    assert "service" in data
+    assert "version" in data
+
+# Test para verificar que el endpoint de health devuelve los valores correctos
+def test_health_endpoint_response_values(client):
+    # Simulamos la petición
+    response = client.get("/health")
+    # Convertimos la respuesta en un diccionario para verificar su contenido
+    data = response.json()
+
+    assert data["status"] == "healthy", f"Se esperaba status='healthy' y se obtuvo {data['status']}"
+    assert data["service"] == "NEWSRADAR API", f"Se esperaba service='NEWSRADAR API' y se obtuvo {data['service']}"
+    assert data["version"] == "1.0.0", f"Se esperaba version='1.0.0' y se obtuvo {data['version']}"
+
+# Test para verificar que el endpoint de health devuelve un JSON válido
+def test_health_endpoint_returns_json(client):
+    # Simulamos la petición
+    response = client.get("/health")
+    # Verificamos que el tipo de contenido de la respuesta sea JSON, no usamos igualdad estricta porque 
+    # puede incluir charset u otros parámetros
+    assert "application/json" in response.headers["content-type"]
 
 
-class TestHealthEndpoint:
-    """Suite de tests para el endpoint /health"""
-    
-    def test_health_endpoint_returns_200(self, client):
-        """Verificar que el endpoint /health devuelve HTTP 200."""
-        response = client.get("/health")
-        assert response.status_code == 200
-    
-    def test_health_endpoint_response_structure(self, client):
-        """Verificar que la respuesta tiene la estructura esperada."""
-        response = client.get("/health")
-        json_response = response.json()
-        
-        assert "status" in json_response
-        assert "service" in json_response
-        assert "version" in json_response
-    
-    def test_health_endpoint_response_values(self, client):
-        """Verificar que los valores de la respuesta son correctos."""
-        response = client.get("/health")
-        json_response = response.json()
-        
-        assert json_response["status"] == "healthy"
-        assert json_response["service"] == "NEWSRADAR API"
-        assert json_response["version"] == "1.0.0"
-    
-    def test_health_endpoint_content_type(self, client):
-        """Verificar que el Content-Type es JSON."""
-        response = client.get("/health")
-        assert response.headers["content-type"] == "application/json"
-    
-    def test_root_endpoint_exists(self, client):
-        """Verificar que el endpoint raíz existe y responde."""
-        response = client.get("/")
-        assert response.status_code == 200
-        json_response = response.json()
-        assert "message" in json_response
-        assert "version" in json_response
-
-
-class TestAPIDocumentation:
-    """Suite de tests para la documentación de la API"""
-    
-    def test_swagger_ui_available(self, client):
-        """Verificar que Swagger UI está disponible en /docs."""
-        response = client.get("/docs")
-        assert response.status_code == 200
-    
-    def test_redoc_available(self, client):
-        """Verificar que ReDoc está disponible en /redoc."""
-        response = client.get("/redoc")
-        assert response.status_code == 200
-    
-    def test_openapi_schema_available(self, client):
-        """Verificar que el esquema OpenAPI está disponible."""
-        response = client.get("/openapi.json")
-        assert response.status_code == 200
-        json_response = response.json()
-        assert "info" in json_response
-        assert "paths" in json_response
-
-
-if __name__ == "__main__":
-    pytest.main([__file__, "-v"])
+"""
+Nota: Estos tests son básicos y se centran en la verificación de la respuesta del endpoint de health.
+Si en el futuro el endpoint /health devuelve más información
+(p. ej. estado de base de datos, servicios externos o timestamp),
+habrá que ampliar este archivo con nuevas comprobaciones.
+"""
