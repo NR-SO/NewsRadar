@@ -1,59 +1,103 @@
 {
-  "sources": [
+  "_comment": "Datos semilla de referencia para NEWSRADAR. Las fuentes RSS se insertan en init-mongo.js. Los usuarios se crean via scripts/seed_db.py con hashing bcrypt.",
+  "users": [
     {
-      "name": "BBC News",
-      "url": "http://feeds.bbc.co.uk/news/rss.xml",
-      "category": "General News",
-      "active": true,
-      "updateFrequency": "hourly"
+      "email": "admin@newsradar.com",
+      "password_plain": "admin123",
+      "name": "Admin Manager",
+      "role": "gestor_newsradar",
+      "preferences": {
+        "iptcSubscriptions": ["04000000", "11000000", "13000000", "15000000"],
+        "sourceSubscriptions": [],
+        "alertsEnabled": true,
+        "emailNotifications": true,
+        "language": "es"
+      }
     },
     {
-      "name": "Reuters - Technology",
-      "url": "https://www.reuters.com/technology",
-      "category": "Technology",
-      "active": true,
-      "updateFrequency": "hourly"
+      "email": "reader@newsradar.com",
+      "password_plain": "reader123",
+      "name": "Reader User",
+      "role": "lector",
+      "preferences": {
+        "iptcSubscriptions": ["13000000"],
+        "sourceSubscriptions": [],
+        "alertsEnabled": true,
+        "emailNotifications": false,
+        "language": "en"
+      }
+    }
+  ],
+  "alerts": [
+    {
+      "name": "Inteligencia Artificial",
+      "owner_email": "admin@newsradar.com",
+      "keywords": [
+        {
+          "term": "inteligencia artificial",
+          "synonyms": ["IA", "AI", "machine learning", "aprendizaje automático", "deep learning", "redes neuronales", "LLM"]
+        },
+        {
+          "term": "ChatGPT",
+          "synonyms": ["GPT-4", "OpenAI", "modelos de lenguaje", "chatbot", "asistente virtual"]
+        }
+      ],
+      "iptcTopics": ["13000000"],
+      "active": true
     },
     {
-      "name": "The Guardian - Business",
-      "url": "https://www.theguardian.com/business/rss",
-      "category": "Business",
-      "active": true,
-      "updateFrequency": "hourly"
+      "name": "Crisis Climática",
+      "owner_email": "admin@newsradar.com",
+      "keywords": [
+        {
+          "term": "cambio climático",
+          "synonyms": ["calentamiento global", "climate change", "emisiones CO2", "descarbonización", "transición energética", "COP30"]
+        },
+        {
+          "term": "energías renovables",
+          "synonyms": ["solar", "eólica", "energía verde", "energía limpia", "paneles solares", "aerogeneradores"]
+        }
+      ],
+      "iptcTopics": ["06000000"],
+      "active": true
     },
     {
-      "name": "NASA News",
-      "url": "https://www.nasa.gov/news/news.rss.xml",
-      "category": "Science",
-      "active": true,
-      "updateFrequency": "daily"
-    },
-    {
-      "name": "TechCrunch",
-      "url": "http://feeds.feedburner.com/TechCrunch/",
-      "category": "Technology",
-      "active": true,
-      "updateFrequency": "hourly"
+      "name": "Mercados Financieros",
+      "owner_email": "admin@newsradar.com",
+      "keywords": [
+        {
+          "term": "bolsa",
+          "synonyms": ["mercado de valores", "IBEX 35", "S&P 500", "Nasdaq", "acciones", "cotización"]
+        },
+        {
+          "term": "inflación",
+          "synonyms": ["IPC", "precio", "BCE", "Fed", "tipos de interés", "política monetaria", "euro"]
+        }
+      ],
+      "iptcTopics": ["04000000"],
+      "active": true
     }
   ],
   "iptcTopics": {
     "version": "2.0",
     "topics": [
-      {
-        "code": "01000000",
-        "name": "Arts, Culture, Entertainment, and Sports",
-        "subtopics": ["01001000", "01002000", "01003000"]
-      },
-      {
-        "code": "02000000",
-        "name": "Business, Economics, and Finance",
-        "subtopics": ["02001000", "02002000", "02003000"]
-      },
-      {
-        "code": "07000000",
-        "name": "Science and Education",
-        "subtopics": ["07001000", "07002000", "07003000"]
-      }
+      { "code": "01000000", "name": "Arts, Culture, Entertainment and Lifestyle" },
+      { "code": "02000000", "name": "Crime, Law and Justice" },
+      { "code": "03000000", "name": "Disaster, Accident and Emergency incident" },
+      { "code": "04000000", "name": "Economy, Business and Finance" },
+      { "code": "05000000", "name": "Education" },
+      { "code": "06000000", "name": "Environment" },
+      { "code": "07000000", "name": "Health" },
+      { "code": "08000000", "name": "Human Interest" },
+      { "code": "09000000", "name": "Labour" },
+      { "code": "10000000", "name": "Politics" },
+      { "code": "11000000", "name": "Conflict, War and Peace" },
+      { "code": "12000000", "name": "Religion and Belief" },
+      { "code": "13000000", "name": "Science and Technology" },
+      { "code": "14000000", "name": "Society" },
+      { "code": "15000000", "name": "Sport" },
+      { "code": "16000000", "name": "Weather" },
+      { "code": "17000000", "name": "Media" }
     ]
   }
 }
