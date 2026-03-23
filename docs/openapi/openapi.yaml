@@ -1,0 +1,359 @@
+openapi: 3.0.0
+
+info:
+  title: NewsRadar API
+  version: 1.0.0
+  description: API REST para el sistema NewsRadar
+
+servers:
+  - url: http://localhost:8000
+
+tags:
+  - name: Auth
+  - name: Users
+  - name: Alerts
+  - name: Sources
+  - name: Notifications
+  - name: System
+
+paths:
+
+  /api/v1/health:
+    get:
+      tags: [System]
+      summary: Estado del sistema
+      responses:
+        '200':
+          description: OK
+
+  # ---------------- AUTH ----------------
+
+  /api/v1/auth/register:
+    post:
+      tags: [Auth]
+      summary: Registrar usuario
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserRegister'
+      responses:
+        '201': { description: Usuario creado }
+
+  /api/v1/auth/login:
+    post:
+      tags: [Auth]
+      summary: Login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserLogin'
+      responses:
+        '200':
+          description: Login correcto
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+
+  # ---------------- USERS ----------------
+
+  /api/v1/users:
+    get:
+      tags: [Users]
+      summary: Listar usuarios
+      description: Solo admin
+      security: [{ bearerAuth: [] }]
+      responses:
+        '200':
+          description: Lista de usuarios
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+
+    post:
+      tags: [Users]
+      summary: Crear usuario
+      description: Solo admin
+      security: [{ bearerAuth: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserRegister'
+      responses:
+        '201': { description: Usuario creado }
+
+  /api/v1/users/{id}:
+    get:
+      tags: [Users]
+      summary: Obtener usuario
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: integer }
+      responses:
+        '200':
+          description: Usuario
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+
+    put:
+      tags: [Users]
+      summary: Actualizar usuario
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: integer }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserUpdate'
+      responses:
+        '200': { description: Usuario actualizado }
+
+    delete:
+      tags: [Users]
+      summary: Eliminar usuario
+      description: Solo admin
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: integer }
+      responses:
+        '204': { description: Eliminado }
+
+  # ---------------- ALERTS ----------------
+
+  /api/v1/alerts:
+    get:
+      tags: [Alerts]
+      summary: Listar alertas
+      security: [{ bearerAuth: [] }]
+      responses:
+        '200':
+          description: Lista de alertas
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Alert'
+
+    post:
+      tags: [Alerts]
+      summary: Crear alerta
+      description: Solo admin
+      security: [{ bearerAuth: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AlertCreate'
+      responses:
+        '201': { description: Alerta creada }
+
+  /api/v1/alerts/{id}:
+    get:
+      tags: [Alerts]
+      summary: Obtener alerta
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: integer }
+      responses:
+        '200':
+          description: Alerta
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Alert'
+
+    put:
+      tags: [Alerts]
+      summary: Actualizar alerta
+      description: Solo admin
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: integer }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AlertCreate'
+      responses:
+        '200': { description: Actualizada }
+
+    delete:
+      tags: [Alerts]
+      summary: Eliminar alerta
+      description: Solo admin
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: integer }
+      responses:
+        '204': { description: Eliminada }
+
+  # ---------------- SOURCES ----------------
+
+  /api/v1/sources:
+    get:
+      tags: [Sources]
+      summary: Listar fuentes RSS
+      security: [{ bearerAuth: [] }]
+      responses:
+        '200':
+          description: Lista de fuentes
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Source'
+
+    post:
+      tags: [Sources]
+      summary: Crear fuente RSS
+      description: Solo admin
+      security: [{ bearerAuth: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SourceCreate'
+      responses:
+        '201': { description: Fuente creada }
+
+  # ---------------- NOTIFICATIONS ----------------
+
+  /api/v1/notifications:
+    get:
+      tags: [Notifications]
+      summary: Listar notificaciones
+      security: [{ bearerAuth: [] }]
+      responses:
+        '200':
+          description: Lista de notificaciones
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Notification'
+
+components:
+
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+
+    User:
+      type: object
+      properties:
+        id: { type: integer }
+        email: { type: string }
+        name: { type: string }
+        role:
+          type: string
+          enum: [admin, reader]
+
+    UserRegister:
+      type: object
+      required: [email, password, name]
+      properties:
+        email: { type: string }
+        password: { type: string }
+        name: { type: string }
+        role:
+          type: string
+          enum: [admin, reader]
+          default: reader
+
+    UserUpdate:
+      type: object
+      properties:
+        email: { type: string }
+        name: { type: string }
+        password: { type: string }
+
+    UserLogin:
+      type: object
+      required: [email, password]
+      properties:
+        email: { type: string }
+        password: { type: string }
+
+    AuthResponse:
+      type: object
+      properties:
+        access_token: { type: string }
+        token_type: { type: string }
+
+    Alert:
+      type: object
+      properties:
+        id: { type: integer }
+        nombre: { type: string }
+        palabra_clave: { type: string }
+        categoria: { type: string }
+
+    AlertCreate:
+      type: object
+      required: [nombre, palabra_clave, categoria]
+      properties:
+        nombre: { type: string }
+        palabra_clave: { type: string }
+        categoria: { type: string }
+
+    Source:
+      type: object
+      properties:
+        id: { type: integer }
+        nombre: { type: string }
+        url: { type: string }
+
+    SourceCreate:
+      type: object
+      required: [nombre, url]
+      properties:
+        nombre: { type: string }
+        url: { type: string }
+
+    Notification:
+      type: object
+      properties:
+        id: { type: integer }
+        titulo: { type: string }
+        mensaje: { type: string }
