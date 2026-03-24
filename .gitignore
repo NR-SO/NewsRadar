@@ -183,3 +183,5 @@ Thumbs.db
 *.tmp
 *.bak
 .temp/
+
+.claude/
