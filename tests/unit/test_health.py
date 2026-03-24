@@ -11,6 +11,7 @@ def test_health_endpoint_returns_200(client):
     response = client.get("/health")
     assert response.status_code == 200
 
+
 # Test para verificar que el endpoint de health devuelve la estructura de datos esperada
 def test_health_endpoint_response_structure(client):
     # Simulamos la petición
@@ -21,6 +22,7 @@ def test_health_endpoint_response_structure(client):
     assert "status" in data
     assert "service" in data
     assert "version" in data
+
 
 # Test para verificar que el endpoint de health devuelve los valores correctos
 def test_health_endpoint_response_values(client):
@@ -33,11 +35,12 @@ def test_health_endpoint_response_values(client):
     assert data["service"] == "NEWSRADAR API", f"Se esperaba service='NEWSRADAR API' y se obtuvo {data['service']}"
     assert data["version"] == "1.0.0", f"Se esperaba version='1.0.0' y se obtuvo {data['version']}"
 
+
 # Test para verificar que el endpoint de health devuelve un JSON válido
 def test_health_endpoint_returns_json(client):
     # Simulamos la petición
     response = client.get("/health")
-    # Verificamos que el tipo de contenido de la respuesta sea JSON, no usamos igualdad estricta porque 
+    # Verificamos que el tipo de contenido de la respuesta sea JSON, no usamos igualdad estricta porque
     # puede incluir charset u otros parámetros
     assert "application/json" in response.headers["content-type"]
 
