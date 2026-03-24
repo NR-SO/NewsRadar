@@ -83,6 +83,7 @@ jobs:
       - name: Ejecutar Tests unitarios con cobertura
         env:
           MONGO_URI: mongodb://admin:password@localhost:27017/
+          PYTHONPATH: ./src/backend
         run: python -m pytest tests/unit --cov=src/backend --cov-report=xml --cov-report=term-missing -v
 
       - name: Subir reporte de cobertura
