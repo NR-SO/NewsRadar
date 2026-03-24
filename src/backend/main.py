@@ -18,6 +18,8 @@ from fastapi.responses import JSONResponse
 from core.config import settings
 from db.database import connect_db, disconnect_db, ping_database
 
+from api.v1.health import router as health_router
+
 # Configurar logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -156,38 +158,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-
-# ============================================
-# Health Check Endpoints
-# ============================================
-@app.get("/health", status_code=status.HTTP_200_OK, tags=["Health"])
-async def health_check() -> Dict[str, Any]:
-    """
-    Endpoint de verificación de salud de la API.
-    Retorna el estado actual del servicio y la conectividad a la base de datos.
-    """
-    db_status = "disconnected"
-    if _db_connected:
-        try:
-            await ping_database()
-            db_status = "connected"
-        except Exception:
-            db_status = "error"
-
-    return JSONResponse(
-        status_code=200,
-        content={
-            "status": "healthy",
-            "service": "NEWSRADAR API",
-            "version": "1.0.0",
-            "database": {
-                "status": db_status,
-                "type": "MongoDB",
-                "name": settings.DATABASE_NAME,
-            },
-        },
-    )
-
+app.include_router(health_router, prefix="/api/v1")
 
 @app.get("/", tags=["Root"])
 async def root() -> Dict[str, str]:
