@@ -1,5 +1,7 @@
 # NEWSRADAR
 
+![CI](https://github.com/EliiSD/NewsRadar/actions/workflows/ci.yml/badge.svg)
+
 **Proyecto Académico - Grado en Ingeniería Informática, UC3M**
 
 Sistema de procesamiento y análisis de canales RSS con clasificación automática mediante IPTC Media Topics y visualización interactiva en tiempo real.

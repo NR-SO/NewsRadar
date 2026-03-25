@@ -8,7 +8,7 @@ mediante IPTC Media Topics y visualización en tiempo real.
 
 import logging
 from contextlib import asynccontextmanager
-from typing import Any, Dict
+from typing import Dict
 
 from fastapi import FastAPI, status
 from fastapi.middleware.cors import CORSMiddleware
@@ -16,7 +16,9 @@ from fastapi.openapi.utils import get_openapi
 from fastapi.responses import JSONResponse
 
 from core.config import settings
-from db.database import connect_db, disconnect_db, ping_database
+from db.database import connect_db, disconnect_db
+
+from api.v1.health import router as health_router
 
 # Configurar logging
 logging.basicConfig(level=logging.INFO)
@@ -156,37 +158,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-
-# ============================================
-# Health Check Endpoints
-# ============================================
-@app.get("/health", status_code=status.HTTP_200_OK, tags=["Health"])
-async def health_check() -> Dict[str, Any]:
-    """
-    Endpoint de verificación de salud de la API.
-    Retorna el estado actual del servicio y la conectividad a la base de datos.
-    """
-    db_status = "disconnected"
-    if _db_connected:
-        try:
-            await ping_database()
-            db_status = "connected"
-        except Exception:
-            db_status = "error"
-
-    return JSONResponse(
-        status_code=200,
-        content={
-            "status": "healthy",
-            "service": "NEWSRADAR API",
-            "version": "1.0.0",
-            "database": {
-                "status": db_status,
-                "type": "MongoDB",
-                "name": settings.DATABASE_NAME,
-            },
-        },
-    )
+app.include_router(health_router)
 
 
 @app.get("/", tags=["Root"])
