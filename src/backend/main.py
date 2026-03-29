@@ -19,6 +19,7 @@ from core.config import settings
 from db.database import connect_db, disconnect_db, ping_database
 
 from api.v1.health import router as health_router
+from api.v1.users import router as users_router
 
 # Configurar logging
 logging.basicConfig(level=logging.INFO)
@@ -159,6 +160,7 @@ app.add_middleware(
 )
 
 app.include_router(health_router, prefix="/api/v1")
+app.include_router(users_router, prefix="/api/v1")
 
 @app.get("/", tags=["Root"])
 async def root() -> Dict[str, str]:
