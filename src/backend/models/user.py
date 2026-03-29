@@ -39,6 +39,15 @@ class UserInDB(BaseModel):
     lastLogin: Optional[datetime] = None
 
 
+class UserUpdate(BaseModel):
+    email: Optional[str] = None
+    name: Optional[str] = None
+    password: Optional[str] = None
+    role: Optional[UserRole] = None
+    active: Optional[bool] = None
+    preferences: Optional[UserPreferences] = None
+
+
 class UserResponse(BaseModel):
     id: Optional[str] = None
     email: str

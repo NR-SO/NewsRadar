@@ -282,24 +282,26 @@ components:
     User:
       type: object
       properties:
-        id: { type: integer }
+        id: { type: string }
         email: { type: string }
         name: { type: string }
         role:
           type: string
-          enum: [admin, reader]
+          enum: [gestor_newsradar, lector]
+        active: { type: boolean }
+        createdAt: { type: string, format: date-time }
 
     UserRegister:
       type: object
       required: [email, password, name]
       properties:
-        email: { type: string }
-        password: { type: string }
+        email: { type: string, format: email }
+        password: { type: string, minLength: 8 }
         name: { type: string }
         role:
           type: string
-          enum: [admin, reader]
-          default: reader
+          enum: [gestor_newsradar, lector]
+          default: lector
 
     UserUpdate:
       type: object
