@@ -8,7 +8,7 @@ mediante IPTC Media Topics y visualización en tiempo real.
 
 import logging
 from contextlib import asynccontextmanager
-from typing import Any, Dict
+from typing import Dict
 
 from fastapi import FastAPI, status
 from fastapi.middleware.cors import CORSMiddleware
@@ -16,7 +16,7 @@ from fastapi.openapi.utils import get_openapi
 from fastapi.responses import JSONResponse
 
 from core.config import settings
-from db.database import connect_db, disconnect_db, ping_database
+from db.database import connect_db, disconnect_db
 
 from api.v1.health import router as health_router
 
@@ -159,6 +159,7 @@ app.add_middleware(
 )
 
 app.include_router(health_router, prefix="/api/v1")
+
 
 @app.get("/", tags=["Root"])
 async def root() -> Dict[str, str]:
